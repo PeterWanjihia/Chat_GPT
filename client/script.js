@@ -11,13 +11,14 @@ function loader(element) {
   element.textContent = "";
 
   loadInterval = setInterval(() => {
-    element.textContent = ".";
+    element.textContent += ".";
 
-    if (element.textContent === "....") {
+    if (element.textContent === ".....") {
       element.textContent = "";
     }
   }, 300);
 }
+
 
 // Simulating the process of typing
 function typeText(element, text) {
@@ -33,6 +34,7 @@ function typeText(element, text) {
   }, 20);
 }
 
+
 function generateUniqueID() {
   const timestamp = Date.now();
   const randomNum = Math.random();
@@ -46,16 +48,16 @@ function chatStripe(isAI, value, uniqueId) {
   return `
       <div class="wrapper ${isAI && "ai"}">
         <div class="chat">
-          <div class="Profile">
+          <div className="Profile">
             <img
               src="${isAI ? bot : user}"
               alt="${isAI ? "bot" : "user"}"
             />
           </div>
-          <div class="message" id=${uniqueId}>${value}</div>
+          <div class="message" id="${uniqueId}">${value}</div>
         </div>
       </div>
-    `;
+    `
 }
 
 // Implementing the submit button
@@ -69,14 +71,19 @@ const handleSubmit = async (e) => {
   form.reset();
 
   // bot's Chatstripe
-  const uniqueId = getUniqueID();
-  chatContainer.innerHTML += chatStripe(true, " ", uniqueId);
+  const uniqueId = generateUniqueID();
+  chatContainer.innerHTML += chatStripe(true," ", uniqueId);
 
   chatContainer.scrollTop = chatContainer.scrollHeight;
 
   const messageDiv = document.getElementById(uniqueId);
-  loader(messageDiv);
+  loader(messageDiv);  
 };
-
+  
 // calling the handleSubmit() and defining the enter event
-
+form.addEventListener('submit',handleSubmit);
+form.addEventListener('keyup',(e)=>{
+  if(e.keyCode === 13){
+    handleSubmit(e);
+  }
+})
